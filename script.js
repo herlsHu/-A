@@ -9,6 +9,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const addExampleBtn = document.getElementById('add-example-btn');
     const examplesContainer = document.getElementById('examples-container');
 
+    // Function to collect all form data
+    const collectFormData = () => {
+        const characterData = {};
+
+        // Basic Settings
+        characterData.avatar = avatarPreview.src || ""; // Base64 or empty string if no image
+        characterData.language = document.getElementById('language').value || "";
+        characterData.voice = document.getElementById('voice').value || ""; // Filename or empty string
+
+        characterData.name = document.getElementById('name').value || "";
+        // Handle radio buttons: if nothing is checked, value will be empty string
+        characterData.gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+        characterData.age = document.getElementById('age').value || "";
+        characterData.dob = document.getElementById('dob').value || "";
+        characterData.mbti = document.getElementById('mbti').value || "";
+        characterData.stance = document.getElementById('stance').value || "";
+        characterData.personality = document.getElementById('personality').value || "";
+        characterData.appearance = document.getElementById('appearance').value || "";
+
+        // Supplemental Settings
+        characterData.world = document.getElementById('world').value || "";
+        characterData.identity = document.getElementById('identity').value || "";
+        characterData.supplemental = document.getElementById('supplemental').value || "";
+        characterData.userRelation = document.getElementById('userRelation').value || "";
+
+        // Language Habits
+        characterData.addressUser = document.getElementById('addressUser').value || "";
+        characterData.greeting = document.getElementById('greeting').value || "";
+        characterData.catchphrase = document.getElementById('catchphrase').value || "";
+
+        // Collect all example dialogues, even if empty
+        characterData.examples = [];
+        document.querySelectorAll('#examples-container textarea').forEach(textarea => {
+            characterData.examples.push(textarea.value || "");
+        });
+
+        return characterData;
+    };
+
     // 1. Tab Switching Logic
     const initTabs = () => {
         tabButtons.forEach(button => {
@@ -85,46 +124,32 @@ document.addEventListener('DOMContentLoaded', () => {
     characterForm.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent default form submission
 
-        const formData = new FormData(characterForm);
-        const characterData = {};
-
-        // Get data from all form elements
-        characterData.avatar = avatarPreview.src; // Store base64 or empty string
-        characterData.name = document.getElementById('name').value;
-        characterData.gender = document.querySelector('input[name="gender"]:checked').value;
-        characterData.age = document.getElementById('age').value;
-        characterData.language = document.getElementById('language').value;
-        characterData.personality = document.getElementById('personality').value;
-        characterData.background = document.getElementById('background').value;
-
-        characterData.world = document.getElementById('world').value;
-        characterData.identity = document.getElementById('identity').value;
-        characterData.supplemental = document.getElementById('supplemental').value;
-        characterData.userRelation = document.getElementById('userRelation').value;
-
-        characterData.addressUser = document.getElementById('addressUser').value;
-        characterData.greeting = document.getElementById('greeting').value;
-        characterData.catchphrase = document.getElementById('catchphrase').value;
-
-        // Collect all example dialogues
-        characterData.examples = [];
-        document.querySelectorAll('#examples-container textarea').forEach(textarea => {
-            characterData.examples.push(textarea.value);
-        });
+        const characterData = collectFormData(); // Use the new function to collect data
 
         // Basic Validation
         let isValid = true;
-        const requiredFields = ['name', 'language', 'personality'];
+        // Note: I'm keeping the original required fields for now. If you want to change them,
+        // please provide the updated list.
+        const requiredFields = ['name', 'personality', 'appearance']; // Updated based on latest HTML requirements
+
         requiredFields.forEach(id => {
             const input = document.getElementById(id);
-            if (!input.value.trim()) {
+            if (input && !input.value.trim()) {
                 isValid = false;
-                input.style.borderColor = 'var(--error-color)';
+                input.style.borderColor = 'var(--error)'; // Use CSS variable
                 input.placeholder = '此项为必填！'; // Provide feedback
-            } else {
-                input.style.borderColor = 'var(--border-color)'; // Reset border
+            } else if (input) {
+                input.style.borderColor = ''; // Reset border, remove inline style
             }
         });
+
+        // Special validation for gender if needed
+        const genderChecked = document.querySelector('input[name="gender"]:checked');
+        if (!genderChecked) {
+            isValid = false;
+            // You might want to add visual feedback here for radio buttons
+            console.log('性别为必填项！'); // Log to console for now
+        }
 
         if (isValid) {
             console.log('Form Data:', characterData);
@@ -137,18 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Export Data to JSON
     exportBtn.addEventListener('click', () => {
-        const savedData = localStorage.getItem('characterData');
-        if (savedData) {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(savedData);
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "character_data.json");
-            document.body.appendChild(downloadAnchorNode); // Required for Firefox
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        } else {
-            alert('没有可导出的角色数据。请先保存角色！');
-        }
+        const currentCharacterData = collectFormData(); // Collect data directly from form
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentCharacterData, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "character_data.json");
+        document.body.appendChild(downloadAnchorNode); // Required for Firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     });
 
     // 7. Form Reset
