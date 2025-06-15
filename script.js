@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const addExampleBtn = document.getElementById('add-example-btn');
     const examplesContainer = document.getElementById('examples-container');
 
+    // New modal elements
+    const exportModal = document.getElementById('exportModal');
+    const exportedDataTextarea = document.getElementById('exportedDataTextarea');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
     // Function to collect all form data
     const collectFormData = () => {
         const characterData = {};
@@ -165,8 +170,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentCharacterData = collectFormData(); // Collect data directly from form
         const formattedData = JSON.stringify(currentCharacterData, null, 2); // Pretty print JSON
         
-        // Display data in an alert for direct viewing
-        alert("导出的角色数据：\n\n" + formattedData);
+        exportedDataTextarea.value = formattedData; // Set textarea value
+        exportModal.classList.add('active'); // Show the modal
+    });
+
+    // Close Modal Logic
+    closeModalBtn.addEventListener('click', () => {
+        exportModal.classList.remove('active');
+    });
+
+    // Optionally close modal by clicking outside content
+    exportModal.addEventListener('click', (event) => {
+        if (event.target === exportModal) {
+            exportModal.classList.remove('active');
+        }
     });
 
     // 7. Form Reset
