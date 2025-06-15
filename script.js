@@ -9,11 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addExampleBtn = document.getElementById('add-example-btn');
     const examplesContainer = document.getElementById('examples-container');
 
-    // New modal elements
-    const exportModal = document.getElementById('exportModal');
-    const exportedDataTextarea = document.getElementById('exportedDataTextarea');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-
     // Function to collect all form data
     const collectFormData = () => {
         const characterData = {};
@@ -165,25 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 6. Export Data to JSON
+    // 6. Export Data to TXT
     exportBtn.addEventListener('click', () => {
         const currentCharacterData = collectFormData(); // Collect data directly from form
-        const formattedData = JSON.stringify(currentCharacterData, null, 2); // Pretty print JSON
-        
-        exportedDataTextarea.value = formattedData; // Set textarea value
-        exportModal.classList.add('active'); // Show the modal
-    });
-
-    // Close Modal Logic
-    closeModalBtn.addEventListener('click', () => {
-        exportModal.classList.remove('active');
-    });
-
-    // Optionally close modal by clicking outside content
-    exportModal.addEventListener('click', (event) => {
-        if (event.target === exportModal) {
-            exportModal.classList.remove('active');
-        }
+        const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(currentCharacterData, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "character_data.txt"); // Change to .txt
+        document.body.appendChild(downloadAnchorNode); // Required for Firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     });
 
     // 7. Form Reset
