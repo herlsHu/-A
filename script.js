@@ -163,13 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Export Data to JSON
     exportBtn.addEventListener('click', () => {
         const currentCharacterData = collectFormData(); // Collect data directly from form
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentCharacterData, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "character_data.json");
-        document.body.appendChild(downloadAnchorNode); // Required for Firefox
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
+        const formattedData = JSON.stringify(currentCharacterData, null, 2); // Pretty print JSON
+        
+        // Display data in an alert for direct viewing
+        alert("导出的角色数据：\n\n" + formattedData);
     });
 
     // 7. Form Reset
