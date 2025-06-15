@@ -2,46 +2,63 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('roleForm');
     const exportBtn = document.getElementById('exportBtn');
     
-    // 导出功能
-    exportBtn.addEventListener('click', function() {
-        const savedRoles = JSON.parse(localStorage.getItem('roles') || '[]');
-        
-        if (savedRoles.length === 0) {
-            alert('没有可导出的数据！');
-            return;
+    // 字数统计功能
+    function setupCharCount(textarea, counter) {
+        const maxLength = textarea.getAttribute('maxlength') || 500;
+        textarea.addEventListener('input', function() {
+            const remaining = maxLength - this.value.length;
+            counter.textContent = `${this.value.length}/${maxLength}`;
+            
+            // 添加动画效果
+            counter.classList.add('fade-in');
+            setTimeout(() => counter.classList.remove('fade-in'), 300);
+        });
+    }
+    
+    // 为所有文本域设置字数统计
+    document.querySelectorAll('textarea').forEach(textarea => {
+        const counter = textarea.parentElement.querySelector('.char-count');
+        if (counter) {
+            setupCharCount(textarea, counter);
         }
-        
-        // 创建导出数据
-        const exportData = {
-            version: '1.0',
-            exportDate: new Date().toISOString(),
-            roles: savedRoles
-        };
-        
-        // 转换为 JSON 字符串
-        const jsonString = JSON.stringify(exportData, null, 2);
-        
-        // 创建 Blob 对象
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        
-        // 创建下载链接
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `role-data-${new Date().toISOString().split('T')[0]}.json`;
-        
-        // 触发下载
-        document.body.appendChild(a);
-        a.click();
-        
-        // 清理
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    });
+    
+    // 表单验证
+    function validateInput(input) {
+        if (input.hasAttribute('required') && !input.value.trim()) {
+            input.classList.add('border-red-500');
+            return false;
+        } else {
+            input.classList.remove('border-red-500');
+            return true;
+        }
+    }
+    
+    // 实时验证
+    form.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('input', function() {
+            validateInput(this);
+        });
     });
     
     // 表单提交处理
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        // 验证所有必填字段
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!validateInput(field)) {
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            alert('请填写所有必填字段！');
+            return;
+        }
         
         // 获取表单数据
         const formData = new FormData(form);
@@ -51,72 +68,68 @@ document.addEventListener('DOMContentLoaded', function() {
             roleData[key] = value;
         }
         
-        // 验证必填字段
-        const requiredFields = ['name', 'gender', 'appearance', 'personality', 'background'];
-        const missingFields = requiredFields.filter(field => !roleData[field]);
-        
-        if (missingFields.length > 0) {
-            alert('请填写所有必填字段！');
-            return;
-        }
-        
         // 保存到本地存储
         saveRoleData(roleData);
         
         // 显示成功消息
         alert('角色创建成功！');
         form.reset();
+        
+        // 重置字数统计
+        document.querySelectorAll('.char-count').forEach(counter => {
+            counter.textContent = '0/500';
+        });
     });
     
     // 保存数据到本地存储
     function saveRoleData(data) {
-        // 获取现有数据
         let savedRoles = JSON.parse(localStorage.getItem('roles') || '[]');
-        
-        // 添加新角色
         savedRoles.push({
             ...data,
-            id: Date.now(), // 使用时间戳作为唯一ID
+            id: Date.now(),
             createdAt: new Date().toISOString()
         });
-        
-        // 保存回本地存储
         localStorage.setItem('roles', JSON.stringify(savedRoles));
     }
     
-    // 添加输入验证
-    const inputs = form.querySelectorAll('input, textarea, select');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            validateInput(this);
-        });
+    // 导出功能
+    exportBtn.addEventListener('click', function() {
+        const savedRoles = JSON.parse(localStorage.getItem('roles') || '[]');
+        
+        if (savedRoles.length === 0) {
+            alert('没有可导出的数据！');
+            return;
+        }
+        
+        const exportData = {
+            version: '1.0',
+            exportDate: new Date().toISOString(),
+            roles: savedRoles
+        };
+        
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `role-data-${new Date().toISOString().split('T')[0]}.json`;
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
     
-    // 输入验证函数
-    function validateInput(input) {
-        if (input.hasAttribute('required') && !input.value.trim()) {
-            input.classList.add('border-red-500');
-        } else {
+    // 重置按钮处理
+    form.querySelector('button[type="reset"]').addEventListener('click', function() {
+        // 重置字数统计
+        document.querySelectorAll('.char-count').forEach(counter => {
+            counter.textContent = '0/500';
+        });
+        
+        // 移除验证样式
+        form.querySelectorAll('input, textarea, select').forEach(input => {
             input.classList.remove('border-red-500');
-        }
-    }
-    
-    // 添加字数限制提示
-    const textareas = form.querySelectorAll('textarea');
-    textareas.forEach(textarea => {
-        const maxLength = textarea.getAttribute('maxlength') || 500;
-        const wrapper = document.createElement('div');
-        wrapper.className = 'relative';
-        textarea.parentNode.insertBefore(wrapper, textarea);
-        wrapper.appendChild(textarea);
-        
-        const counter = document.createElement('div');
-        counter.className = 'text-xs text-gray-500 mt-1 text-right';
-        wrapper.appendChild(counter);
-        
-        textarea.addEventListener('input', function() {
-            const remaining = maxLength - this.value.length;
-            counter.textContent = `还可以输入 ${remaining} 个字符`;
         });
     });
 }); 
