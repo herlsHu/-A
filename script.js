@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const characterData = {};
 
         // Get data from all form elements
-        characterData.avatar = avatarPreview.src; // Store base64 or default path
+        characterData.avatar = avatarPreview.src; // Store base64 or empty string
         characterData.name = document.getElementById('name').value;
         characterData.gender = document.querySelector('input[name="gender"]:checked').value;
         characterData.age = document.getElementById('age').value;
@@ -153,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 7. Form Reset
     characterForm.addEventListener('reset', () => {
-        // Reset avatar preview to default
-        avatarPreview.src = 'default-avatar.png';
+        // Reset avatar preview to empty
+        avatarPreview.src = '';
         // Clear local storage on reset (optional, but good for a full reset)
         localStorage.removeItem('characterData');
         // Reset character counters
