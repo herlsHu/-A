@@ -26,7 +26,7 @@
                     <!-- 基本设定 -->
                     <div class="tab-pane active" id="basic">
                         <div class="form-group">
-                            <label for="avatar">角色头像 <span class="required">*</span></label>
+                            <label for="avatar">角色头像</label>
                             <input type="file" accept="image/*" id="avatar" class="form-input">
                             <div id="avatar-preview" class="avatar-preview">
                                 <img src="" alt="角色头像预览">
@@ -34,12 +34,28 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="name">角色名称 <span class="required">*</span></label>
-                            <input type="text" id="name" class="form-input" required placeholder="如：爱丽丝">
+                            <label for="language">角色常用语言</label>
+                            <select id="language" class="form-select">
+                                <option value="中文">中文</option>
+                                <option value="英文">英文</option>
+                                <option value="日语">日语</option>
+                                <option value="其他">其他</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label>角色性别 <span class="required">*</span></label>
+                            <label for="voice">角色语音 (≤15s)</label>
+                            <input type="file" accept=".mp3,.wav" id="voice" class="form-input">
+                            <span class="text-sm text-gray">支持 MP3/WAV, 时长 ≤15 秒</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">角色名称 <span class="required">*</span></label>
+                            <input type="text" id="name" class="form-input" required placeholder="请输入角色名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label>性别 <span class="required">*</span></label>
                             <div class="radio-group">
                                 <label class="radio-label">
                                     <input type="radio" name="gender" value="男" checked> 男
@@ -54,32 +70,61 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="age">角色年龄</label>
-                            <input type="number" id="age" class="form-input" placeholder="如：18">
+                            <label for="age">年龄</label>
+                            <input type="number" id="age" class="form-input">
                         </div>
 
                         <div class="form-group">
-                            <label for="language">角色常用语言 <span class="required">*</span></label>
-                            <select id="language" class="form-select" required>
-                                <option value="">请选择语言</option>
-                                <option value="中文">中文</option>
-                                <option value="英文">英文</option>
-                                <option value="日语">日语</option>
-                                <option value="其他">其他</option>
+                            <label for="dob">生日</label>
+                            <input type="date" id="dob" class="form-input" placeholder="年/月/日">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mbti">MBTI</label>
+                            <select id="mbti" class="form-select">
+                                <option value="">选择 MBTI</option>
+                                <option value="INTJ">INTJ</option>
+                                <option value="INTP">INTP</option>
+                                <option value="ENTJ">ENTJ</option>
+                                <option value="ENTP">ENTP</option>
+                                <option value="INFJ">INFJ</option>
+                                <option value="INFP">INFP</option>
+                                <option value="ENFJ">ENFJ</option>
+                                <option value="ENFP">ENFP</option>
+                                <option value="ISTJ">ISTJ</option>
+                                <option value="ISFJ">ISFJ</option>
+                                <option value="ESTJ">ESTJ</option>
+                                <option value="ESFJ">ESFJ</option>
+                                <option value="ISTP">ISTP</option>
+                                <option value="ISFP">ISFP</option>
+                                <option value="ESTP">ESTP</option>
+                                <option value="ESFP">ESFP</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="personality">性格特征 <span class="required">*</span></label>
+                            <label for="stance">立场</label>
+                            <select id="stance" class="form-select">
+                                <option value="">选择立场</option>
+                                <option value="善良">善良</option>
+                                <option value="中立">中立</option>
+                                <option value="邪恶">邪恶</option>
+                                <option value="混乱">混乱</option>
+                                <option value="秩序">秩序</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personality">性格 <span class="required">*</span></label>
                             <textarea id="personality" class="form-textarea" maxlength="1000" required
-                                placeholder="善良、勇敢、内向、外向…"></textarea>
+                                placeholder="性格、优缺点、兴趣爱好..."></textarea>
                             <span class="char-count">0/1000</span>
                         </div>
 
                         <div class="form-group">
-                            <label for="background">背景故事</label>
-                            <textarea id="background" class="form-textarea" maxlength="1000"
-                                placeholder="角色的成长经历、重要事件…"></textarea>
+                            <label for="appearance">外貌 <span class="required">*</span></label>
+                            <textarea id="appearance" class="form-textarea" maxlength="1000" required
+                                placeholder="身高等体型、发型发色、瞳色..."></textarea>
                             <span class="char-count">0/1000</span>
                         </div>
                     </div>
@@ -89,28 +134,28 @@
                         <div class="form-group">
                             <label for="world">世界观</label>
                             <textarea id="world" class="form-textarea" maxlength="1000"
-                                placeholder="时代背景、文化冲突、魔法/科技水平…"></textarea>
+                                placeholder="时代背景、文化冲突..."></textarea>
                             <span class="char-count">0/1000</span>
                         </div>
 
                         <div class="form-group">
                             <label for="identity">身份</label>
                             <textarea id="identity" class="form-textarea" maxlength="1000"
-                                placeholder="种族、职业、阶层、特殊地位…"></textarea>
+                                placeholder="种族、职业、阶层..."></textarea>
                             <span class="char-count">0/1000</span>
                         </div>
 
                         <div class="form-group">
                             <label for="supplemental">补充设定</label>
                             <textarea id="supplemental" class="form-textarea" maxlength="1000"
-                                placeholder="技能、爱好、口头禅、特殊能力、人际关系…"></textarea>
+                                placeholder="角色经历、生活习惯..."></textarea>
                             <span class="char-count">0/1000</span>
                         </div>
 
                         <div class="form-group">
                             <label for="userRelation">与用户的关系</label>
                             <textarea id="userRelation" class="form-textarea" maxlength="500"
-                                placeholder="角色如何看待用户，以及二者之间的互动方式。"></textarea>
+                                placeholder="如：挚友 / 上级 / 主仆..."></textarea>
                             <span class="char-count">0/500</span>
                         </div>
                     </div>
@@ -119,7 +164,7 @@
                     <div class="tab-pane" id="language">
                         <div class="form-group">
                             <label for="addressUser">如何称呼用户</label>
-                            <input type="text" id="addressUser" class="form-input" placeholder="如：主人 / 挚友 / 阁下…">
+                            <input type="text" id="addressUser" class="form-input" placeholder="如：挚友 / 挚友 / 阁下…">
                         </div>
 
                         <div class="form-group">
@@ -128,20 +173,25 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="catchphrase">结束语/口头禅</label>
-                            <input type="text" id="catchphrase" class="form-input" placeholder="角色对话结束时可能说的话，或经常重复的短语">
+                            <label for="catchphrase">口癖</label>
+                            <input type="text" id="catchphrase" class="form-input" placeholder="角色常挂在嘴边的话">
                         </div>
 
                         <div class="form-group">
-                            <label>示例对话</label>
+                            <label>【示例对话】</label>
                             <div id="examples-container">
                                 <div class="example-item mt-2">
                                     <textarea id="example1" class="form-textarea" maxlength="500"
-                                        placeholder="示例对话1：角色：&quot;你好，我是[角色名]。&quot;用户：&quot;你好！&quot;"></textarea>
+                                        placeholder="示例1"></textarea>
+                                    <span class="char-count">0/500</span>
+                                </div>
+                                <div class="example-item mt-2">
+                                    <textarea id="example2" class="form-textarea" maxlength="500"
+                                        placeholder="示例2"></textarea>
                                     <span class="char-count">0/500</span>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-secondary mt-2" id="add-example-btn">添加示例</button>
+                            <button type="button" class="btn btn-secondary mt-2" id="add-example-btn">+ 添加</button>
                         </div>
                     </div>
                 </div>
