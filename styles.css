@@ -71,6 +71,15 @@ body {
     color: white;
 }
 
+/* 标签页内容样式 */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
 /* 表单组件 */
 .form-group {
     margin-bottom: 1.5rem;
