@@ -50,11 +50,11 @@ function initTabs() {
 
             // 移除所有活动状态
             tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabPanes.forEach(content => content.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
 
             // 设置当前标签页为活动状态
             button.classList.add('active');
-            const targetId = button.getAttribute('data-tab'); // 使用 data-tab
+            const targetId = button.getAttribute('data-tab');
             document.getElementById(targetId).classList.add('active');
         });
     });
@@ -141,7 +141,7 @@ function initCharCounters() {
 
 // 表单验证
 function initFormValidation() {
-    const form = document.querySelector('form');
+    const form = document.getElementById('characterForm');
     const requiredFields = form.querySelectorAll('[required]');
 
     requiredFields.forEach(field => {
